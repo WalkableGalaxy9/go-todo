@@ -6,6 +6,7 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"testing/fstest"
 )
 
 func TestPrintTodo(t *testing.T) {
@@ -100,5 +101,24 @@ func TestWriteJSONToFile(t *testing.T) {
 		t.Error("File does not exist.")
 	} else {
 		t.Error("Error checking file:", err)
+	}
+}
+
+func TestReadJSONFromAFile(t *testing.T) {
+	fs := fstest.MapFS{
+		"input/todo.txt": {Data: []byte(`[{"Title":"Do laundry","Complete":true},{"Title":"Go shopping","Complete":false},{"Title":"learn go","Complete":false}]`)},
+	}
+
+	buffer := bytes.Buffer{}
+	err := ReadJSONFromAFile(fs, "input/todo.txt", &buffer)
+
+	want := "1. Do laundry - complete\n2. Go shopping - incomplete\n3. learn go - incomplete\n"
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if want != buffer.String() {
+		t.Errorf("Want %s got %s", want, buffer.String())
 	}
 }

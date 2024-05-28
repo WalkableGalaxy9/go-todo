@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 )
 
@@ -44,12 +45,40 @@ func WriteJSONToFile(filename string, items []TodoItem) error {
 
 	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
-		fmt.Println("Error opening file:", err)
+		fmt.Printf("Error opening file: %v", err)
 		return err
 	}
 	defer file.Close()
 
 	PrintTodoJSON(file, items)
+
+	return nil
+}
+
+func ReadJSONFromAFile(filesystem fs.FS, filename string, writer io.Writer) error {
+	todofile, err := filesystem.Open(filename)
+	if err != nil {
+		fmt.Printf("Error opening file: %v", err)
+		return err
+	}
+	defer todofile.Close()
+
+	data, err := io.ReadAll(todofile)
+
+	if err != nil {
+		fmt.Printf("Error reading file: %v", err)
+		return err
+	}
+
+	var items []TodoItem
+	err = json.Unmarshal(data, &items)
+
+	if err != nil {
+		fmt.Printf("Error parsing JSON: %v", err)
+		return err
+	}
+
+	PrintTodo(writer, items)
 
 	return nil
 }

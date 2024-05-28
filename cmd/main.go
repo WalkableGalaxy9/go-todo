@@ -55,5 +55,7 @@ func main() {
 
 	gotodo.PrintTodoJSON(os.Stdout, todo)
 
-	gotodo.WriteJSONToFile("output/todo.txt", todo)
+	gotodo.WriteJSONToFile("../output/todo.txt", todo)
+
+	gotodo.ReadJSONFromAFile(os.DirFS("../input"), "todo.txt", os.Stdout)
 }
