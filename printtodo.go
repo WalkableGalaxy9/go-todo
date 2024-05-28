@@ -10,13 +10,25 @@ type TodoItem struct {
 	Complete bool
 }
 
-func PrintTodo(writer io.Writer, item TodoItem) {
+func PrintTodo(writer io.Writer, items []TodoItem) {
 
-	completeString := "complete"
+	for _, item := range items {
+		completeString := "complete"
 
-	if !item.Complete {
-		completeString = "incomplete"
+		if !item.Complete {
+			completeString = "incomplete"
+		}
+
+		fmt.Fprintf(writer, "%s - %s\n", item.Title, completeString)
+	}
+}
+
+func CreateList(items ...string) (todos []TodoItem) {
+
+	for _, item := range items {
+		todos = append(todos, TodoItem{item, false})
 	}
 
-	fmt.Fprintf(writer, "%s - %s\n", item.Title, completeString)
+	return
+
 }
