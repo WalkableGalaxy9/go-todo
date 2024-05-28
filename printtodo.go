@@ -1,6 +1,7 @@
 package gotodo
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 )
@@ -31,4 +32,9 @@ func CreateList(items ...string) (todos []TodoItem) {
 
 	return
 
+}
+
+func PrintTodoJSON(writer io.Writer, items []TodoItem) {
+
+	json.NewEncoder(writer).Encode(items)
 }

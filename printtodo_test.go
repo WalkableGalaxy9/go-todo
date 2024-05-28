@@ -2,6 +2,7 @@ package gotodo
 
 import (
 	"bytes"
+	"encoding/json"
 	"reflect"
 	"testing"
 )
@@ -56,5 +57,24 @@ func TestCreateList(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Want %v got %v", want, got)
+	}
+}
+
+func TestPrintJSON(t *testing.T) {
+	todo := []TodoItem{
+		{"Do laundry", false},
+		{"Go shopping", false},
+		{"learn go", false},
+	}
+
+	buffer := bytes.Buffer{}
+	PrintTodoJSON(&buffer, todo)
+
+	//response := buffer.String()
+	var got []TodoItem
+	err := json.NewDecoder(&buffer).Decode(&got)
+
+	if err != nil {
+		t.Errorf("Unable to convert response to JSON: %s, %s", buffer.String(), err)
 	}
 }
