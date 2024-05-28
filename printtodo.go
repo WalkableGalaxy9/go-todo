@@ -56,10 +56,21 @@ func WriteJSONToFile(filename string, items []TodoItem) error {
 }
 
 func ReadJSONFromAFile(filesystem fs.FS, filename string, writer io.Writer) error {
+	items, err := ExtractItemsFromJSONFile(filesystem, filename)
+	if err != nil {
+		return err
+	}
+
+	PrintTodo(writer, items)
+
+	return nil
+}
+
+func ExtractItemsFromJSONFile(filesystem fs.FS, filename string) ([]TodoItem, error) {
 	todofile, err := filesystem.Open(filename)
 	if err != nil {
 		fmt.Printf("Error opening file: %v", err)
-		return err
+		return nil, err
 	}
 	defer todofile.Close()
 
@@ -67,7 +78,7 @@ func ReadJSONFromAFile(filesystem fs.FS, filename string, writer io.Writer) erro
 
 	if err != nil {
 		fmt.Printf("Error reading file: %v", err)
-		return err
+		return nil, err
 	}
 
 	var items []TodoItem
@@ -75,10 +86,8 @@ func ReadJSONFromAFile(filesystem fs.FS, filename string, writer io.Writer) erro
 
 	if err != nil {
 		fmt.Printf("Error parsing JSON: %v", err)
-		return err
+		return nil, err
 	}
 
-	PrintTodo(writer, items)
-
-	return nil
+	return items, nil
 }
