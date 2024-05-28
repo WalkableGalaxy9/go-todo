@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 )
 
 type TodoItem struct {
@@ -37,4 +38,18 @@ func CreateList(items ...string) (todos []TodoItem) {
 func PrintTodoJSON(writer io.Writer, items []TodoItem) {
 
 	json.NewEncoder(writer).Encode(items)
+}
+
+func WriteJSONToFile(filename string, items []TodoItem) error {
+
+	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return err
+	}
+	defer file.Close()
+
+	PrintTodoJSON(file, items)
+
+	return nil
 }

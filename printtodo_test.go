@@ -3,6 +3,7 @@ package gotodo
 import (
 	"bytes"
 	"encoding/json"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -76,5 +77,28 @@ func TestPrintJSON(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Unable to convert response to JSON: %s, %s", buffer.String(), err)
+	}
+}
+
+func TestWriteJSONToFile(t *testing.T) {
+	items := []TodoItem{
+		{"Do laundry", false},
+		{"Go shopping", false},
+		{"learn go", false},
+	}
+
+	filePath := "output/todo.txt"
+	err := WriteJSONToFile(filePath, items)
+
+	if err != nil {
+		t.Errorf("Unexpected error %d", err)
+	}
+	// Check if the file exists
+	if _, err := os.Stat(filePath); err == nil {
+		t.Log("File exists.")
+	} else if os.IsNotExist(err) {
+		t.Error("File does not exist.")
+	} else {
+		t.Error("Error checking file:", err)
 	}
 }

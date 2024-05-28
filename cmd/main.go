@@ -54,4 +54,6 @@ func main() {
 	gotodo.PrintTodo(os.Stdout, todo)
 
 	gotodo.PrintTodoJSON(os.Stdout, todo)
+
+	gotodo.WriteJSONToFile("output/todo.txt", todo)
 }
