@@ -18,5 +18,5 @@ func PrintTodo(writer io.Writer, item TodoItem) {
 		completeString = "incomplete"
 	}
 
-	fmt.Fprintf(writer, "%s - %s", item.Title, completeString)
+	fmt.Fprintf(writer, "%s - %s\n", item.Title, completeString)
 }
