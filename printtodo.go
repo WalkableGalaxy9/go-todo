@@ -12,14 +12,14 @@ type TodoItem struct {
 
 func PrintTodo(writer io.Writer, items []TodoItem) {
 
-	for _, item := range items {
+	for index, item := range items {
 		completeString := "complete"
 
 		if !item.Complete {
 			completeString = "incomplete"
 		}
 
-		fmt.Fprintf(writer, "%s - %s\n", item.Title, completeString)
+		fmt.Fprintf(writer, "%d. %s - %s\n", index+1, item.Title, completeString)
 	}
 }
 

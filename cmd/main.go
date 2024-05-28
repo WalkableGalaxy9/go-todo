@@ -10,43 +10,43 @@ func main() {
 
 	todo := []gotodo.TodoItem{
 		{
-			Title:    "1. Do laundry",
+			Title:    "Do laundry",
 			Complete: false,
 		},
 		{
-			Title:    "2. Learn go",
+			Title:    "Learn go",
 			Complete: false,
 		},
 		{
-			Title:    "3. Go to dentist",
+			Title:    "Go to dentist",
 			Complete: false,
 		},
 		{
-			Title:    "4. Update Driving licence",
+			Title:    "Update Driving licence",
 			Complete: true,
 		},
 		{
-			Title:    "5. Make seating plan",
+			Title:    "Make seating plan",
 			Complete: false,
 		},
 		{
-			Title:    "6. Send remaining invites",
+			Title:    "Send remaining invites",
 			Complete: false,
 		},
 		{
-			Title:    "7. Plan political rally",
+			Title:    "Plan political rally",
 			Complete: true,
 		},
 		{
-			Title:    "8. Another item",
+			Title:    "Another item",
 			Complete: false,
 		},
 		{
-			Title:    "9. Clean kitchen",
+			Title:    "Clean kitchen",
 			Complete: false,
 		},
 		{
-			Title:    "10. Blah",
+			Title:    "Blah",
 			Complete: false,
 		},
 	}

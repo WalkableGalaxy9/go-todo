@@ -18,7 +18,7 @@ func TestPrintTodo(t *testing.T) {
 		buffer := bytes.Buffer{}
 		PrintTodo(&buffer, todo)
 
-		want := "Do laundry - incomplete\nGo shopping - incomplete\nlearn go - incomplete\n"
+		want := "1. Do laundry - incomplete\n2. Go shopping - incomplete\n3. learn go - incomplete\n"
 		got := buffer.String()
 
 		if got != want {
@@ -35,7 +35,7 @@ func TestPrintTodo(t *testing.T) {
 		buffer := bytes.Buffer{}
 		PrintTodo(&buffer, todo)
 
-		want := "Do laundry - complete\nGo shopping - complete\nlearn go - complete\n"
+		want := "1. Do laundry - complete\n2. Go shopping - complete\n3. learn go - complete\n"
 		got := buffer.String()
 
 		if got != want {
