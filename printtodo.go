@@ -1,11 +1,14 @@
 package gotodo
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
+	"log"
 	"os"
+	"strings"
 )
 
 type TodoItem struct {
@@ -13,9 +16,11 @@ type TodoItem struct {
 	Complete bool
 }
 
-func PrintTodo(writer io.Writer, items []TodoItem) {
+var TodoList []TodoItem
 
-	for index, item := range items {
+func PrintTodo(writer io.Writer) {
+
+	for index, item := range TodoList {
 		completeString := "complete"
 
 		if !item.Complete {
@@ -26,22 +31,23 @@ func PrintTodo(writer io.Writer, items []TodoItem) {
 	}
 }
 
-func CreateList(items ...string) (todos []TodoItem) {
+func CreateList(items ...string) {
 
+	list := []TodoItem{}
 	for _, item := range items {
-		todos = append(todos, TodoItem{item, false})
+		list = append(list, TodoItem{item, false})
 	}
 
-	return
+	TodoList = list
 
 }
 
-func PrintTodoJSON(writer io.Writer, items []TodoItem) {
+func PrintTodoJSON(writer io.Writer) {
 
-	json.NewEncoder(writer).Encode(items)
+	json.NewEncoder(writer).Encode(TodoList)
 }
 
-func WriteJSONToFile(filename string, items []TodoItem) error {
+func WriteJSONToFile(filename string) error {
 
 	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
@@ -50,27 +56,27 @@ func WriteJSONToFile(filename string, items []TodoItem) error {
 	}
 	defer file.Close()
 
-	PrintTodoJSON(file, items)
+	PrintTodoJSON(file)
 
 	return nil
 }
 
 func ReadJSONFromAFile(filesystem fs.FS, filename string, writer io.Writer) error {
-	items, err := ExtractItemsFromJSONFile(filesystem, filename)
+	err := ExtractItemsFromJSONFile(filesystem, filename)
 	if err != nil {
 		return err
 	}
 
-	PrintTodo(writer, items)
+	PrintTodo(writer)
 
 	return nil
 }
 
-func ExtractItemsFromJSONFile(filesystem fs.FS, filename string) ([]TodoItem, error) {
+func ExtractItemsFromJSONFile(filesystem fs.FS, filename string) error {
 	todofile, err := filesystem.Open(filename)
 	if err != nil {
 		fmt.Printf("Error opening file: %v", err)
-		return nil, err
+		return err
 	}
 	defer todofile.Close()
 
@@ -78,16 +84,34 @@ func ExtractItemsFromJSONFile(filesystem fs.FS, filename string) ([]TodoItem, er
 
 	if err != nil {
 		fmt.Printf("Error reading file: %v", err)
-		return nil, err
+		return err
 	}
 
-	var items []TodoItem
-	err = json.Unmarshal(data, &items)
+	err = json.Unmarshal(data, &TodoList)
 
 	if err != nil {
 		fmt.Printf("Error parsing JSON: %v", err)
-		return nil, err
+		return err
 	}
 
-	return items, nil
+	return nil
+}
+
+func CreateTodo(title string, complete bool) TodoItem {
+	return TodoItem{Title: title, Complete: complete}
+}
+
+func AddTodoInput(input io.Reader, output io.Writer) {
+
+	fmt.Fprintln(output, "Title:")
+
+	reader := bufio.NewReader(input)
+	title, err := reader.ReadString('\n')
+
+	if err != nil {
+		log.Fatalf("Error reading title: %v", err)
+	}
+	title = strings.TrimSpace(title)
+
+	TodoList = append(TodoList, CreateTodo(title, false))
 }
