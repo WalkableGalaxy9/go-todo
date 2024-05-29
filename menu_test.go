@@ -11,7 +11,7 @@ func TestTopMenu(t *testing.T) {
 
 		output := bytes.Buffer{}
 		input := bytes.Buffer{}
-		wantmenu := "\n-----MENU-----\nA. Add Todo\n"
+		wantmenu := "\n-----MENU-----\nA. Add Todo\nD. Delete\n"
 		input.WriteString("A")
 
 		got := GetMenuOption(&input, &output)
@@ -30,7 +30,7 @@ func TestTopMenu(t *testing.T) {
 	t.Run("Unknown", func(t *testing.T) {
 		output := bytes.Buffer{}
 		input := bytes.Buffer{}
-		wantmenu := "\n-----MENU-----\nA. Add Todo\n"
+		wantmenu := "\n-----MENU-----\nA. Add Todo\nD. Delete\n"
 		input.WriteString(".")
 
 		got := GetMenuOption(&input, &output)
@@ -59,6 +59,8 @@ func TestConvertInputToMenuOption(t *testing.T) {
 		{"Add lower", 'a', MenuAddTodo},
 		{"None", ' ', MenuUnknown},
 		{"Dot", '.', MenuUnknown},
+		{"Delete", 'D', MenuDelete},
+		{"Delete lower", 'd', MenuDelete},
 	}
 
 	for _, test := range cases {
@@ -77,7 +79,7 @@ func TestConvertInputToMenuOption(t *testing.T) {
 func TestDisplayMenu(t *testing.T) {
 
 	output := bytes.Buffer{}
-	wantmenu := "\n-----MENU-----\nA. Add Todo\n"
+	wantmenu := "\n-----MENU-----\nA. Add Todo\nD. Delete\n"
 
 	DisplayMenu(&output)
 

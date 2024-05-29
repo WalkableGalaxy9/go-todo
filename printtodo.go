@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -114,4 +115,21 @@ func AddTodoInput(input io.Reader, output io.Writer) {
 	title = strings.TrimSpace(title)
 
 	TodoList = append(TodoList, CreateTodo(title, false))
+}
+
+func DeleteTodoInput(input io.Reader, output io.Writer) {
+
+	fmt.Fprintln(output, "Number:")
+
+	reader := bufio.NewReader(input)
+	title, err := reader.ReadString('\n')
+
+	if err != nil {
+		log.Fatalf("Error reading title: %v", err)
+	}
+
+	indexToRemove, _ := strconv.Atoi(strings.TrimSpace(title))
+
+	TodoList = append(TodoList[:indexToRemove-1], TodoList[indexToRemove:]...)
+
 }

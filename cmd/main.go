@@ -25,8 +25,11 @@ func main() {
 		switch option {
 		case gotodo.MenuAddTodo:
 			gotodo.AddTodoInput(os.Stdin, os.Stdout)
+		case gotodo.MenuDelete:
+			gotodo.DeleteTodoInput(os.Stdin, os.Stdout)
 
 		}
+
 	}
 
 }
