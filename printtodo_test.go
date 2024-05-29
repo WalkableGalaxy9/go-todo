@@ -169,3 +169,22 @@ func TestAddItem(t *testing.T) {
 		t.Errorf("Got %v want %v", output.String(), "Title:\n")
 	}
 }
+
+func TestTopMenu(t *testing.T) {
+
+	output := bytes.Buffer{}
+	input := bytes.Buffer{}
+
+	input.WriteString("A")
+	wantmenu := "A. Add Todo\n"
+
+	got := GetMenuOption(&input, &output)
+
+	if got != MenuAddTodo {
+		t.Errorf("Got %v wanted %v", got, MenuAddTodo)
+	}
+
+	if output.String() != wantmenu {
+		t.Errorf("Got %v wanted %v", output.String(), wantmenu)
+	}
+}
