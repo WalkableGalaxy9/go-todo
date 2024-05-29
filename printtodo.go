@@ -11,13 +11,6 @@ import (
 	"strings"
 )
 
-type MenuOption int
-
-const (
-	MenuUnknown = iota
-	MenuAddTodo
-)
-
 type TodoItem struct {
 	Title    string
 	Complete bool
@@ -121,23 +114,4 @@ func AddTodoInput(input io.Reader, output io.Writer) {
 	title = strings.TrimSpace(title)
 
 	TodoList = append(TodoList, CreateTodo(title, false))
-}
-
-func GetMenuOption(input io.Reader, output io.Writer) MenuOption {
-
-	fmt.Fprintf(output, "\n-----MENU-----\nA. Add Todo\n")
-
-	reader := bufio.NewReader(input)
-	option, _, err := reader.ReadRune()
-
-	if err != nil {
-		log.Fatalf("Error reading title: %v", err)
-	}
-
-	switch option {
-	case 'A':
-		return MenuAddTodo
-	default:
-		return MenuUnknown
-	}
 }
