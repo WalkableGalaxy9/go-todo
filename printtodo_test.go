@@ -172,19 +172,43 @@ func TestAddItem(t *testing.T) {
 
 func TestTopMenu(t *testing.T) {
 
-	output := bytes.Buffer{}
-	input := bytes.Buffer{}
+	t.Run("Add todo", func(t *testing.T) {
 
-	input.WriteString("A")
-	wantmenu := "A. Add Todo\n"
+		output := bytes.Buffer{}
+		input := bytes.Buffer{}
+		wantmenu := "\n-----MENU-----\nA. Add Todo\n"
+		input.WriteString("A")
 
-	got := GetMenuOption(&input, &output)
+		got := GetMenuOption(&input, &output)
 
-	if got != MenuAddTodo {
-		t.Errorf("Got %v wanted %v", got, MenuAddTodo)
-	}
+		if got != MenuAddTodo {
+			t.Errorf("Got %v wanted %v", got, MenuAddTodo)
+		}
 
-	if output.String() != wantmenu {
-		t.Errorf("Got %v wanted %v", output.String(), wantmenu)
-	}
+		gotmenu := output.String()
+
+		if gotmenu != wantmenu {
+			t.Errorf("Got %v wanted %v", gotmenu, wantmenu)
+		}
+	})
+
+	t.Run("Unknown", func(t *testing.T) {
+		output := bytes.Buffer{}
+		input := bytes.Buffer{}
+		wantmenu := "\n-----MENU-----\nA. Add Todo\n"
+		input.WriteString(".")
+
+		got := GetMenuOption(&input, &output)
+
+		if got != MenuUnknown {
+			t.Errorf("Got %v wanted %v", got, MenuUnknown)
+		}
+
+		gotmenu := output.String()
+
+		if gotmenu != wantmenu {
+			t.Errorf("Got %v wanted %v", gotmenu, wantmenu)
+		}
+	})
+
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	gotodo "github.com/WalkableGalaxy9/go-todo"
@@ -16,9 +17,16 @@ func main() {
 	}
 
 	for true {
+		fmt.Fprint(os.Stdout, "\033[H\033[2J")
 		gotodo.PrintTodo(os.Stdout)
 
-		gotodo.AddTodoInput(os.Stdin, os.Stdout)
+		option := gotodo.GetMenuOption(os.Stdin, os.Stdout)
+
+		switch option {
+		case gotodo.MenuAddTodo:
+			gotodo.AddTodoInput(os.Stdin, os.Stdout)
+
+		}
 	}
 
 }

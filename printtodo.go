@@ -125,7 +125,7 @@ func AddTodoInput(input io.Reader, output io.Writer) {
 
 func GetMenuOption(input io.Reader, output io.Writer) MenuOption {
 
-	fmt.Fprintf(output, "A. Add Todo\n")
+	fmt.Fprintf(output, "\n-----MENU-----\nA. Add Todo\n")
 
 	reader := bufio.NewReader(input)
 	option, _, err := reader.ReadRune()
