@@ -5,10 +5,8 @@ import "testing"
 func TestOddRoutine(t *testing.T) {
 
 	// Call the Odd Routine 10 times and check all the results are odd between 1 and 10
-
 	for i := 0; i < 100; i++ {
-		got := uint(0)
-		OddRoutine(&got)
+		got := <-OddRoutine()
 
 		if got < 1 || got > 10 || got%2 == 0 {
 			t.Errorf("Wanted an odd number got %d", got)
@@ -22,10 +20,8 @@ func TestOddRoutine(t *testing.T) {
 func TestEvenRoutine(t *testing.T) {
 
 	// Call the Odd Routine 10 times and check all the results are odd between 1 and 10
-
 	for i := 0; i < 100; i++ {
-		got := uint(0)
-		EvenRoutine(&got)
+		got := <-EvenRoutine()
 
 		if got < 1 || got > 10 || got%2 != 0 {
 			t.Errorf("Wanted an even number got %d", got)
