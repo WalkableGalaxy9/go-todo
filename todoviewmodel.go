@@ -52,3 +52,19 @@ func DeleteTodoInput(input io.Reader, output io.Writer) {
 
 	DeleteTodo(indexToRemove)
 }
+
+func ToggleTodoInput(input io.Reader, output io.Writer) {
+
+	fmt.Fprintln(output, "Number:")
+
+	reader := bufio.NewReader(input)
+	title, err := reader.ReadString('\n')
+
+	if err != nil {
+		log.Fatalf("Error reading title: %v", err)
+	}
+
+	index, _ := strconv.Atoi(strings.TrimSpace(title))
+
+	ToggleTodo(index)
+}

@@ -90,3 +90,32 @@ func TestDeleteItem(t *testing.T) {
 		t.Errorf("Got %v want %v", output.String(), "Number:\n")
 	}
 }
+
+func TestToggleItem(t *testing.T) {
+
+	TodoList = []TodoItem{
+		{"Do laundry", false},
+		{"Go shopping", false},
+		{"learn go", false},
+	}
+
+	output := bytes.Buffer{}
+	input := bytes.Buffer{}
+	input.WriteString("1\n")
+
+	ToggleTodoInput(&input, &output)
+
+	want := []TodoItem{
+		{"Do laundry", true},
+		{"Go shopping", false},
+		{"learn go", false},
+	}
+
+	if !reflect.DeepEqual(TodoList, want) {
+		t.Errorf("Got %v want %v", TodoList, want)
+	}
+
+	if output.String() != "Number:\n" {
+		t.Errorf("Got %v want %v", output.String(), "Number:\n")
+	}
+}

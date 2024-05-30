@@ -27,7 +27,8 @@ func main() {
 			gotodo.AddTodoInput(os.Stdin, os.Stdout)
 		case gotodo.MenuDelete:
 			gotodo.DeleteTodoInput(os.Stdin, os.Stdout)
-
+		case gotodo.MenuToggle:
+			gotodo.ToggleTodoInput(os.Stdin, os.Stdout)
 		case gotodo.MenuExit:
 			os.Exit(0)
 		}
