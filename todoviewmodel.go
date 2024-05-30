@@ -9,9 +9,20 @@ import (
 	"strings"
 )
 
-func PrintTodo(list *TodoList, writer io.Writer) {
+type TodoViewModel interface {
+	PrintTodo(io.Writer)
+	AddTodoInput(io.Reader, io.Writer)
+	DeleteTodoInput(io.Reader, io.Writer)
+	ToggleTodoInput(io.Reader, io.Writer)
+}
 
-	for index, item := range *list {
+type TodoViewModelCLI struct {
+	TodoList TodoList
+}
+
+func (t *TodoViewModelCLI) PrintTodo(writer io.Writer) {
+
+	for index, item := range t.TodoList {
 		completeString := "complete"
 
 		if !item.Complete {
@@ -22,7 +33,7 @@ func PrintTodo(list *TodoList, writer io.Writer) {
 	}
 }
 
-func AddTodoInput(list *TodoList, input io.Reader, output io.Writer) {
+func (t *TodoViewModelCLI) AddTodoInput(input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Title:")
 
@@ -34,10 +45,10 @@ func AddTodoInput(list *TodoList, input io.Reader, output io.Writer) {
 	}
 	title = strings.TrimSpace(title)
 
-	list.CreateTodo(title)
+	t.TodoList.CreateTodo(title)
 }
 
-func DeleteTodoInput(list *TodoList, input io.Reader, output io.Writer) {
+func (t *TodoViewModelCLI) DeleteTodoInput(input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Number:")
 
@@ -50,10 +61,10 @@ func DeleteTodoInput(list *TodoList, input io.Reader, output io.Writer) {
 
 	indexToRemove, _ := strconv.Atoi(strings.TrimSpace(title))
 
-	list.DeleteTodo(indexToRemove)
+	t.TodoList.DeleteTodo(indexToRemove)
 }
 
-func ToggleTodoInput(list *TodoList, input io.Reader, output io.Writer) {
+func (t *TodoViewModelCLI) ToggleTodoInput(input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Number:")
 
@@ -66,5 +77,5 @@ func ToggleTodoInput(list *TodoList, input io.Reader, output io.Writer) {
 
 	index, _ := strconv.Atoi(strings.TrimSpace(title))
 
-	list.ToggleTodo(index)
+	t.TodoList.ToggleTodo(index)
 }
