@@ -16,7 +16,7 @@ func main() {
 		},
 	}
 
-	for true {
+	for {
 		fmt.Fprint(os.Stdout, "\033[H\033[2J")
 		gotodo.PrintTodo(os.Stdout)
 
@@ -31,7 +31,6 @@ func main() {
 		case gotodo.MenuExit:
 			os.Exit(0)
 		}
-
 	}
 
 }

@@ -95,3 +95,68 @@ func TestDeleteTodo(t *testing.T) {
 		}
 	})
 }
+
+func TestToggleTodo(t *testing.T) {
+
+	t.Run("First item", func(t *testing.T) {
+		TodoList = []TodoItem{
+			{"Do laundry", false},
+			{"Go shopping", false},
+			{"learn go", false},
+		}
+
+		err := ToggleTodo(1)
+
+		want := []TodoItem{
+			{"Do laundry", true},
+			{"Go shopping", false},
+			{"learn go", false},
+		}
+
+		if !reflect.DeepEqual(TodoList, want) {
+			t.Errorf("Got %v want %v", TodoList, want)
+		}
+
+		if err != nil {
+			t.Errorf("Got an error %d", err)
+		}
+	})
+
+	t.Run("Second item", func(t *testing.T) {
+		TodoList = []TodoItem{
+			{"Do laundry", true},
+			{"Go shopping", true},
+			{"learn go", true},
+		}
+
+		err := ToggleTodo(2)
+
+		want := []TodoItem{
+			{"Do laundry", true},
+			{"Go shopping", false},
+			{"learn go", true},
+		}
+
+		if !reflect.DeepEqual(TodoList, want) {
+			t.Errorf("Got %v want %v", TodoList, want)
+		}
+
+		if err != nil {
+			t.Errorf("Got an error %d", err)
+		}
+	})
+
+	t.Run("Index out of range", func(t *testing.T) {
+		TodoList = []TodoItem{
+			{"Do laundry", false},
+			{"Go shopping", false},
+			{"learn go", false},
+		}
+
+		err := ToggleTodo(4)
+
+		if err == nil {
+			t.Errorf("Expected an error but didn't get one")
+		}
+	})
+}

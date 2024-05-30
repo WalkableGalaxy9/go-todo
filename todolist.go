@@ -25,3 +25,10 @@ func CreateTodo(title string) {
 
 	TodoList = append(TodoList, item)
 }
+
+func ToggleTodo(index int) error {
+
+	TodoList[index-1].Complete = !TodoList[index-1].Complete
+
+	return nil
+}
