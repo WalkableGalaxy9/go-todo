@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-func PrintTodo(writer io.Writer) {
+func PrintTodo(list *TodoList, writer io.Writer) {
 
-	for index, item := range TodoList {
+	for index, item := range *list {
 		completeString := "complete"
 
 		if !item.Complete {
@@ -22,7 +22,7 @@ func PrintTodo(writer io.Writer) {
 	}
 }
 
-func AddTodoInput(input io.Reader, output io.Writer) {
+func AddTodoInput(list *TodoList, input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Title:")
 
@@ -34,10 +34,10 @@ func AddTodoInput(input io.Reader, output io.Writer) {
 	}
 	title = strings.TrimSpace(title)
 
-	CreateTodo(title)
+	list.CreateTodo(title)
 }
 
-func DeleteTodoInput(input io.Reader, output io.Writer) {
+func DeleteTodoInput(list *TodoList, input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Number:")
 
@@ -50,10 +50,10 @@ func DeleteTodoInput(input io.Reader, output io.Writer) {
 
 	indexToRemove, _ := strconv.Atoi(strings.TrimSpace(title))
 
-	DeleteTodo(indexToRemove)
+	list.DeleteTodo(indexToRemove)
 }
 
-func ToggleTodoInput(input io.Reader, output io.Writer) {
+func ToggleTodoInput(list *TodoList, input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Number:")
 
@@ -66,5 +66,5 @@ func ToggleTodoInput(input io.Reader, output io.Writer) {
 
 	index, _ := strconv.Atoi(strings.TrimSpace(title))
 
-	ToggleTodo(index)
+	list.ToggleTodo(index)
 }

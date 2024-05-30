@@ -5,9 +5,11 @@ import (
 	"testing"
 )
 
+var Todos TodoList
+
 func TestCreateTodo(t *testing.T) {
 
-	want := []TodoItem{
+	want := TodoList{
 		{
 			"Do laundry",
 			false,
@@ -18,17 +20,17 @@ func TestCreateTodo(t *testing.T) {
 		},
 	}
 
-	TodoList = []TodoItem{
+	todoList := TodoList{
 		{
 			"Do laundry",
 			false,
 		},
 	}
 
-	CreateTodo("Learn Go")
+	todoList.CreateTodo("Learn Go")
 
-	if !reflect.DeepEqual(want, TodoList) {
-		t.Errorf("Wanted %v got %v", want, TodoList)
+	if !reflect.DeepEqual(want, todoList) {
+		t.Errorf("Wanted %v got %v", want, todoList)
 	}
 
 }
@@ -36,21 +38,21 @@ func TestCreateTodo(t *testing.T) {
 func TestDeleteTodo(t *testing.T) {
 
 	t.Run("First item", func(t *testing.T) {
-		TodoList = []TodoItem{
+		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
 			{"learn go", false},
 		}
 
-		err := DeleteTodo(1)
+		err := todoList.DeleteTodo(1)
 
-		want := []TodoItem{
+		want := TodoList{
 			{"Go shopping", false},
 			{"learn go", false},
 		}
 
-		if !reflect.DeepEqual(TodoList, want) {
-			t.Errorf("Got %v want %v", TodoList, want)
+		if !reflect.DeepEqual(todoList, want) {
+			t.Errorf("Got %v want %v", todoList, want)
 		}
 
 		if err != nil {
@@ -59,21 +61,44 @@ func TestDeleteTodo(t *testing.T) {
 	})
 
 	t.Run("Second item", func(t *testing.T) {
-		TodoList = []TodoItem{
+		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
 			{"learn go", false},
 		}
 
-		err := DeleteTodo(2)
+		err := todoList.DeleteTodo(2)
 
-		want := []TodoItem{
+		want := TodoList{
 			{"Do laundry", false},
 			{"learn go", false},
 		}
 
-		if !reflect.DeepEqual(TodoList, want) {
-			t.Errorf("Got %v want %v", TodoList, want)
+		if !reflect.DeepEqual(todoList, want) {
+			t.Errorf("Got %v want %v", todoList, want)
+		}
+
+		if err != nil {
+			t.Errorf("Got an error %d", err)
+		}
+	})
+
+	t.Run("Third item", func(t *testing.T) {
+		todoList := TodoList{
+			{"Do laundry", false},
+			{"Go shopping", false},
+			{"learn go", false},
+		}
+
+		err := todoList.DeleteTodo(3)
+
+		want := TodoList{
+			{"Do laundry", false},
+			{"Go shopping", false},
+		}
+
+		if !reflect.DeepEqual(todoList, want) {
+			t.Errorf("Got %v want %v", todoList, want)
 		}
 
 		if err != nil {
@@ -82,13 +107,13 @@ func TestDeleteTodo(t *testing.T) {
 	})
 
 	t.Run("Index out of range", func(t *testing.T) {
-		TodoList = []TodoItem{
+		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
 			{"learn go", false},
 		}
 
-		err := DeleteTodo(4)
+		err := todoList.DeleteTodo(4)
 
 		if err == nil {
 			t.Errorf("Expected an error but didn't get one")
@@ -99,22 +124,22 @@ func TestDeleteTodo(t *testing.T) {
 func TestToggleTodo(t *testing.T) {
 
 	t.Run("First item", func(t *testing.T) {
-		TodoList = []TodoItem{
+		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
 			{"learn go", false},
 		}
 
-		err := ToggleTodo(1)
+		err := todoList.ToggleTodo(1)
 
-		want := []TodoItem{
+		want := TodoList{
 			{"Do laundry", true},
 			{"Go shopping", false},
 			{"learn go", false},
 		}
 
-		if !reflect.DeepEqual(TodoList, want) {
-			t.Errorf("Got %v want %v", TodoList, want)
+		if !reflect.DeepEqual(todoList, want) {
+			t.Errorf("Got %v want %v", todoList, want)
 		}
 
 		if err != nil {
@@ -123,22 +148,46 @@ func TestToggleTodo(t *testing.T) {
 	})
 
 	t.Run("Second item", func(t *testing.T) {
-		TodoList = []TodoItem{
+		todoList := TodoList{
 			{"Do laundry", true},
 			{"Go shopping", true},
 			{"learn go", true},
 		}
 
-		err := ToggleTodo(2)
+		err := todoList.ToggleTodo(2)
 
-		want := []TodoItem{
+		want := TodoList{
 			{"Do laundry", true},
 			{"Go shopping", false},
 			{"learn go", true},
 		}
 
-		if !reflect.DeepEqual(TodoList, want) {
-			t.Errorf("Got %v want %v", TodoList, want)
+		if !reflect.DeepEqual(todoList, want) {
+			t.Errorf("Got %v want %v", todoList, want)
+		}
+
+		if err != nil {
+			t.Errorf("Got an error %d", err)
+		}
+	})
+
+	t.Run("Third item", func(t *testing.T) {
+		todoList := TodoList{
+			{"Do laundry", true},
+			{"Go shopping", true},
+			{"learn go", true},
+		}
+
+		err := todoList.ToggleTodo(3)
+
+		want := TodoList{
+			{"Do laundry", true},
+			{"Go shopping", true},
+			{"learn go", false},
+		}
+
+		if !reflect.DeepEqual(todoList, want) {
+			t.Errorf("Got %v want %v", todoList, want)
 		}
 
 		if err != nil {
@@ -147,13 +196,13 @@ func TestToggleTodo(t *testing.T) {
 	})
 
 	t.Run("Index out of range", func(t *testing.T) {
-		TodoList = []TodoItem{
+		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
 			{"learn go", false},
 		}
 
-		err := ToggleTodo(4)
+		err := todoList.ToggleTodo(4)
 
 		if err == nil {
 			t.Errorf("Expected an error but didn't get one")

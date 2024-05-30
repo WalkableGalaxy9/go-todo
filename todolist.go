@@ -1,37 +1,39 @@
 package gotodo
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type TodoItem struct {
 	Title    string
 	Complete bool
 }
 
-var TodoList []TodoItem
+type TodoList []TodoItem
 
-func DeleteTodo(indexToRemove int) error {
+func (t *TodoList) DeleteTodo(indexToRemove int) error {
 
-	if indexToRemove > len(TodoList) {
+	if indexToRemove > len(*t) {
 		return fmt.Errorf("index out of range")
 	} else {
-		TodoList = append(TodoList[:indexToRemove-1], TodoList[indexToRemove:]...)
+		*t = append((*t)[:indexToRemove-1], (*t)[indexToRemove:]...)
 	}
 
 	return nil
 }
 
-func CreateTodo(title string) {
+func (t *TodoList) CreateTodo(title string) {
 	item := TodoItem{Title: title, Complete: false}
 
-	TodoList = append(TodoList, item)
+	*t = append(*t, item)
 }
 
-func ToggleTodo(index int) error {
+func (t *TodoList) ToggleTodo(index int) error {
 
-	if index > len(TodoList) {
+	if index > len(*t) {
 		return fmt.Errorf("index out of range")
 	} else {
-		TodoList[index-1].Complete = !TodoList[index-1].Complete
+		(*t)[index-1].Complete = !(*t)[index-1].Complete
 	}
 	return nil
 }

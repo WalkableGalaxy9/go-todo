@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	gotodo.TodoList = []gotodo.TodoItem{
+	todos := gotodo.TodoList{
 		{
 			Title:    "Do laundry",
 			Complete: false,
@@ -18,17 +18,17 @@ func main() {
 
 	for {
 		fmt.Fprint(os.Stdout, "\033[H\033[2J")
-		gotodo.PrintTodo(os.Stdout)
+		gotodo.PrintTodo(&todos, os.Stdout)
 
 		option := gotodo.GetMenuOption(os.Stdin, os.Stdout)
 
 		switch option {
 		case gotodo.MenuAddTodo:
-			gotodo.AddTodoInput(os.Stdin, os.Stdout)
+			gotodo.AddTodoInput(&todos, os.Stdin, os.Stdout)
 		case gotodo.MenuDelete:
-			gotodo.DeleteTodoInput(os.Stdin, os.Stdout)
+			gotodo.DeleteTodoInput(&todos, os.Stdin, os.Stdout)
 		case gotodo.MenuToggle:
-			gotodo.ToggleTodoInput(os.Stdin, os.Stdout)
+			gotodo.ToggleTodoInput(&todos, os.Stdin, os.Stdout)
 		case gotodo.MenuExit:
 			os.Exit(0)
 		}
