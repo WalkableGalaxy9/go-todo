@@ -28,7 +28,10 @@ func CreateTodo(title string) {
 
 func ToggleTodo(index int) error {
 
-	TodoList[index-1].Complete = !TodoList[index-1].Complete
-
+	if index > len(TodoList) {
+		return fmt.Errorf("index out of range")
+	} else {
+		TodoList[index-1].Complete = !TodoList[index-1].Complete
+	}
 	return nil
 }
