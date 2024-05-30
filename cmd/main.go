@@ -28,6 +28,8 @@ func main() {
 		case gotodo.MenuDelete:
 			gotodo.DeleteTodoInput(os.Stdin, os.Stdout)
 
+		case gotodo.MenuExit:
+			os.Exit(0)
 		}
 
 	}

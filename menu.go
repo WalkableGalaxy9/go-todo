@@ -14,6 +14,7 @@ const (
 	MenuUnknown = iota
 	MenuAddTodo
 	MenuDelete
+	MenuExit
 )
 
 func GetMenuOption(input io.Reader, output io.Writer) MenuOption {
@@ -31,7 +32,7 @@ func GetMenuOption(input io.Reader, output io.Writer) MenuOption {
 }
 
 func DisplayMenu(output io.Writer) {
-	fmt.Fprintf(output, "\n-----MENU-----\nA. Add Todo\nD. Delete\n")
+	fmt.Fprintf(output, "\n-----MENU-----\nA. Add Todo\nD. Delete\nX. Exit\n")
 }
 
 func ConvertInputToMenuOption(option rune) MenuOption {
@@ -43,6 +44,9 @@ func ConvertInputToMenuOption(option rune) MenuOption {
 		return MenuAddTodo
 	case 'D':
 		return MenuDelete
+
+	case 'X':
+		return MenuExit
 	default:
 		return MenuUnknown
 	}
