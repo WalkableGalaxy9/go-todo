@@ -1,3 +1,5 @@
+github.com/approvals/go-approval-tests v0.0.0-20240417152556-434b9105e958 h1:7/wXpCITDdUf5qOuxr8e9YwFEJIPkZZyD0Z3nvV1Zwc=
+github.com/approvals/go-approval-tests v0.0.0-20240417152556-434b9105e958/go.mod h1:PJOqSY8IofNv3heAD6k8E7EfFS6okiSS9bSAasaAUME=
 github.com/spf13/afero v1.11.0 h1:WJQKhtpdm3v2IzqG8VMqrr6Rf3UYpEF239Jy9wNepM8=
 github.com/spf13/afero v1.11.0/go.mod h1:GH9Y3pIexgf1MTIWtNGyogA5MwRIDXGUr+hbWNoBjkY=
 golang.org/x/text v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=
