@@ -19,7 +19,7 @@ func TestRender(t *testing.T) {
 			Complete: true,
 		},
 		{
-			Title:    "Test
+			Title:    "Test3",
 			Complete: false,
 		},
 	}
