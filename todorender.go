@@ -11,7 +11,15 @@ var (
 	todoTemplates embed.FS
 )
 
-func RenderTodo(output io.Writer, todoList TodoList) error {
+type TodoRender interface {
+	RenderTodo(output io.Writer, todoList TodoList) error
+}
+
+type TodoRenderHTML struct {
+	TodoList TodoList
+}
+
+func (r *TodoRenderHTML) RenderTodo(output io.Writer) error {
 
 	todoTemplate, err := template.New("Todo").Funcs(template.FuncMap{
 		"statusString": func(status bool) string {
@@ -27,7 +35,7 @@ func RenderTodo(output io.Writer, todoList TodoList) error {
 		return err
 	}
 
-	err = todoTemplate.ExecuteTemplate(output, "todo.gohtml", todoList)
+	err = todoTemplate.ExecuteTemplate(output, "todo.gohtml", r.TodoList)
 
 	if err != nil {
 		return err

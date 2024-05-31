@@ -9,7 +9,9 @@ import (
 
 func TestRender(t *testing.T) {
 
-	todoList := TodoList{
+	todoHTML := TodoRenderHTML{}
+
+	todoHTML.TodoList = TodoList{
 		{
 			Title:    "Test",
 			Complete: false,
@@ -27,7 +29,7 @@ func TestRender(t *testing.T) {
 	t.Run("Convert a single todo to Html", func(t *testing.T) {
 
 		buffer := bytes.Buffer{}
-		err := RenderTodo(&buffer, todoList)
+		err := todoHTML.RenderTodo(&buffer)
 
 		AssertNoError(err, t)
 
