@@ -2,10 +2,14 @@ package gotodo
 
 import (
 	"bytes"
+	"fmt"
 	"io"
-	"reflect"
 	"testing"
 	"testing/fstest"
+)
+
+const (
+	testFileName = "output/todo.txt"
 )
 
 type TestFileSystemOps struct {
@@ -14,57 +18,101 @@ type TestFileSystemOps struct {
 }
 
 func (t *TestFileSystemOps) OpenFile(filename string) (io.Writer, error) {
-	t.Input = bytes.Buffer{}
-	return &t.Input, nil
+
+	if filename == testFileName {
+		t.Input = bytes.Buffer{}
+		return &t.Input, nil
+	} else {
+		return nil, fmt.Errorf("Error reading file")
+	}
 }
 
 func TestWriteJSONToFile(t *testing.T) {
 
-	fileSystem := TestFileSystemOps{}
+	t.Run("Green Path", func(t *testing.T) {
+		fileSystem := TestFileSystemOps{}
 
-	todolist := TodoList{
-		{"Do laundry", true},
-		{"Go shopping", false},
-		{"learn go", false},
-	}
+		todolist := TodoList{
+			{"Do laundry", true},
+			{"Go shopping", false},
+			{"learn go", false},
+		}
 
-	want := "[{\"Title\":\"Do laundry\",\"Complete\":true},{\"Title\":\"Go shopping\",\"Complete\":false},{\"Title\":\"learn go\",\"Complete\":false}]\n"
-	filePath := "output/todo.txt"
-	err := WriteJSONToFile(&fileSystem, filePath, todolist)
+		want := "[{\"Title\":\"Do laundry\",\"Complete\":true},{\"Title\":\"Go shopping\",\"Complete\":false},{\"Title\":\"learn go\",\"Complete\":false}]\n"
 
-	if err != nil {
-		t.Errorf("Unexpected error %d", err)
-	}
+		err := WriteJSONToFile(&fileSystem, testFileName, todolist)
 
-	got := fileSystem.Input.String()
-	if got != want {
-		t.Errorf("Got %s want %s", got, want)
-	}
+		if err != nil {
+			t.Errorf("Unexpected error %d", err)
+		}
+
+		got := fileSystem.Input.String()
+		if got != want {
+			t.Errorf("Got %s want %s", got, want)
+		}
+	})
+
+	t.Run("File doesn't exist", func(t *testing.T) {
+		fileSystem := TestFileSystemOps{}
+
+		todolist := TodoList{
+			{"Do laundry", true},
+			{"Go shopping", false},
+			{"learn go", false},
+		}
+
+		err := WriteJSONToFile(&fileSystem, "This file doesnt exist", todolist)
+
+		AssertError(err, t)
+	})
+
 }
 
 func TestReadJSONFromAFile(t *testing.T) {
 
-	filename := "input/todo.txt"
+	t.Run("Green Path", func(t *testing.T) {
 
-	filesystem := fstest.MapFS{
-		filename: {
-			Data: []byte("[{\"Title\":\"Do laundry\",\"Complete\":true},{\"Title\":\"Go shopping\",\"Complete\":false},{\"Title\":\"learn go\",\"Complete\":false}]\n"),
-		},
-	}
+		fileSystem := fstest.MapFS{
+			testFileName: {
+				Data: []byte("[{\"Title\":\"Do laundry\",\"Complete\":true},{\"Title\":\"Go shopping\",\"Complete\":false},{\"Title\":\"learn go\",\"Complete\":false}]\n"),
+			},
+		}
 
-	todolist, err := ReadJSONFromAFile(filesystem, filename)
+		todoList, err := ReadJSONFromAFile(fileSystem, testFileName)
 
-	want := TodoList{
-		{"Do laundry", true},
-		{"Go shopping", false},
-		{"learn go", false},
-	}
+		want := TodoList{
+			{"Do laundry", true},
+			{"Go shopping", false},
+			{"learn go", false},
+		}
 
-	if err != nil {
-		t.Fatal(err)
-	}
+		AssertNoError(err, t)
+		AssertTodoList(want, todoList, t)
+	})
 
-	if !reflect.DeepEqual(want, todolist) {
-		t.Errorf("Want %v got %v", want, todolist)
-	}
+	t.Run("Bad filename", func(t *testing.T) {
+
+		fileSystem := fstest.MapFS{
+			testFileName: {
+				Data: []byte("[{\"Title\":\"Do laundry\",\"Complete\":true},{\"Title\":\"Go shopping\",\"Complete\":false},{\"Title\":\"learn go\",\"Complete\":false}]\n"),
+			},
+		}
+
+		_, err := ReadJSONFromAFile(fileSystem, "This file doesnt exist.txt")
+
+		AssertError(err, t)
+	})
+
+	t.Run("Bad data", func(t *testing.T) {
+
+		filesystem := fstest.MapFS{
+			testFileName: {
+				Data: []byte("This data is rubbish"),
+			},
+		}
+
+		_, err := ReadJSONFromAFile(filesystem, testFileName)
+
+		AssertError(err, t)
+	})
 }
