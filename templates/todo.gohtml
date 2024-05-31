@@ -1,6 +1,8 @@
 <h1>Todo List</h1>
 <div>
-{{range .}}
-   <div>{{.Title}} - {{statusString .Complete}}</div>
-{{end}}
+    {{range .}}
+    <div>{{.Title}} - {{statusString .Complete}}</div>
+    {{end}}
+
+    <a href="/new">Add</a>
 </div>

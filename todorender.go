@@ -13,6 +13,8 @@ var (
 
 type TodoRender interface {
 	RenderTodo(output io.Writer, todoList TodoList) error
+	RenderCreate(output io.Writer, todoList TodoList) error
+	CreateTodoFromPage(newTodo string) error
 }
 
 type TodoRenderHTML struct {
@@ -22,14 +24,7 @@ type TodoRenderHTML struct {
 func (r *TodoRenderHTML) RenderTodo(output io.Writer) error {
 
 	todoTemplate, err := template.New("Todo").Funcs(template.FuncMap{
-		"statusString": func(status bool) string {
-			if !status {
-				return "incomplete"
-			} else {
-				return "complete"
-			}
-		},
-	}).ParseFS(todoTemplates, "templates/*.gohtml")
+		"statusString": StatusString}).ParseFS(todoTemplates, "templates/*.gohtml")
 
 	if err != nil {
 		return err
@@ -42,4 +37,37 @@ func (r *TodoRenderHTML) RenderTodo(output io.Writer) error {
 	}
 
 	return nil
+}
+
+func (r *TodoRenderHTML) RenderCreate(output io.Writer) error {
+
+	todoTemplate, err := template.New("Todo").Funcs(template.FuncMap{
+		"statusString": StatusString}).ParseFS(todoTemplates, "templates/*.gohtml")
+
+	if err != nil {
+		return err
+	}
+
+	err = todoTemplate.ExecuteTemplate(output, "new.gohtml", r.TodoList)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *TodoRenderHTML) CreateTodoFromPage(newTodo string) error {
+
+	r.TodoList.CreateTodo(newTodo)
+	return nil
+}
+
+func StatusString(status bool) string {
+	if !status {
+		return "incomplete"
+	} else {
+		return "complete"
+	}
+
 }

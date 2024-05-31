@@ -18,6 +18,8 @@ func main() {
 	}
 
 	http.HandleFunc("/", interactHandler)
+	http.HandleFunc("/create", createHandler)
+	http.HandleFunc("/new", newHandler)
 	err := http.ListenAndServe("localhost:8081", nil)
 
 	log.Fatal(err)
@@ -26,4 +28,17 @@ func main() {
 func interactHandler(writer http.ResponseWriter, request *http.Request) {
 
 	todoHTML.RenderTodo(writer)
+}
+
+func createHandler(writer http.ResponseWriter, request *http.Request) {
+
+	todo := request.FormValue("todo")
+
+	todoHTML.CreateTodoFromPage(todo)
+	http.Redirect(writer, request, "/", http.StatusFound)
+}
+
+func newHandler(writer http.ResponseWriter, request *http.Request) {
+
+	todoHTML.RenderCreate(writer)
 }
