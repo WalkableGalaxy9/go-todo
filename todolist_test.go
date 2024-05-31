@@ -1,11 +1,8 @@
 package gotodo
 
 import (
-	"reflect"
 	"testing"
 )
-
-var Todos TodoList
 
 func TestCreateTodo(t *testing.T) {
 
@@ -29,15 +26,12 @@ func TestCreateTodo(t *testing.T) {
 
 	todoList.CreateTodo("Learn Go")
 
-	if !reflect.DeepEqual(want, todoList) {
-		t.Errorf("Wanted %v got %v", want, todoList)
-	}
-
+	AssertTodoList(want, todoList, t)
 }
 
 func TestDeleteTodo(t *testing.T) {
 
-	t.Run("First item", func(t *testing.T) {
+	t.Run("Delete first item", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
@@ -51,16 +45,11 @@ func TestDeleteTodo(t *testing.T) {
 			{"learn go", false},
 		}
 
-		if !reflect.DeepEqual(todoList, want) {
-			t.Errorf("Got %v want %v", todoList, want)
-		}
-
-		if err != nil {
-			t.Errorf("Got an error %d", err)
-		}
+		AssertTodoList(want, todoList, t)
+		AssertNoError(err, t)
 	})
 
-	t.Run("Second item", func(t *testing.T) {
+	t.Run("Delete second item", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
@@ -74,16 +63,11 @@ func TestDeleteTodo(t *testing.T) {
 			{"learn go", false},
 		}
 
-		if !reflect.DeepEqual(todoList, want) {
-			t.Errorf("Got %v want %v", todoList, want)
-		}
-
-		if err != nil {
-			t.Errorf("Got an error %d", err)
-		}
+		AssertTodoList(want, todoList, t)
+		AssertNoError(err, t)
 	})
 
-	t.Run("Third item", func(t *testing.T) {
+	t.Run("Delete Third item", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
@@ -97,16 +81,11 @@ func TestDeleteTodo(t *testing.T) {
 			{"Go shopping", false},
 		}
 
-		if !reflect.DeepEqual(todoList, want) {
-			t.Errorf("Got %v want %v", todoList, want)
-		}
-
-		if err != nil {
-			t.Errorf("Got an error %d", err)
-		}
+		AssertTodoList(want, todoList, t)
+		AssertNoError(err, t)
 	})
 
-	t.Run("Index out of range", func(t *testing.T) {
+	t.Run("Delete index out of range", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
@@ -115,15 +94,13 @@ func TestDeleteTodo(t *testing.T) {
 
 		err := todoList.DeleteTodo(4)
 
-		if err == nil {
-			t.Errorf("Expected an error but didn't get one")
-		}
+		AssertError(err, t)
 	})
 }
 
 func TestToggleTodo(t *testing.T) {
 
-	t.Run("First item", func(t *testing.T) {
+	t.Run("Toggle first item", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
@@ -138,16 +115,11 @@ func TestToggleTodo(t *testing.T) {
 			{"learn go", false},
 		}
 
-		if !reflect.DeepEqual(todoList, want) {
-			t.Errorf("Got %v want %v", todoList, want)
-		}
-
-		if err != nil {
-			t.Errorf("Got an error %d", err)
-		}
+		AssertTodoList(want, todoList, t)
+		AssertNoError(err, t)
 	})
 
-	t.Run("Second item", func(t *testing.T) {
+	t.Run("Toggle Second item", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", true},
 			{"Go shopping", true},
@@ -162,16 +134,11 @@ func TestToggleTodo(t *testing.T) {
 			{"learn go", true},
 		}
 
-		if !reflect.DeepEqual(todoList, want) {
-			t.Errorf("Got %v want %v", todoList, want)
-		}
-
-		if err != nil {
-			t.Errorf("Got an error %d", err)
-		}
+		AssertTodoList(want, todoList, t)
+		AssertNoError(err, t)
 	})
 
-	t.Run("Third item", func(t *testing.T) {
+	t.Run("Toggle third item", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", true},
 			{"Go shopping", true},
@@ -186,16 +153,11 @@ func TestToggleTodo(t *testing.T) {
 			{"learn go", false},
 		}
 
-		if !reflect.DeepEqual(todoList, want) {
-			t.Errorf("Got %v want %v", todoList, want)
-		}
-
-		if err != nil {
-			t.Errorf("Got an error %d", err)
-		}
+		AssertTodoList(want, todoList, t)
+		AssertNoError(err, t)
 	})
 
-	t.Run("Index out of range", func(t *testing.T) {
+	t.Run("Toggle index out of range", func(t *testing.T) {
 		todoList := TodoList{
 			{"Do laundry", false},
 			{"Go shopping", false},
@@ -203,9 +165,6 @@ func TestToggleTodo(t *testing.T) {
 		}
 
 		err := todoList.ToggleTodo(4)
-
-		if err == nil {
-			t.Errorf("Expected an error but didn't get one")
-		}
+		AssertError(err, t)
 	})
 }

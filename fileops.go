@@ -9,6 +9,7 @@ import (
 )
 
 type FileOps interface {
+	// Brought this into an interface so we can mock it for testing
 	OpenFile(filename string) (io.Writer, error)
 }
 
@@ -25,45 +26,45 @@ func (f *FileSystemOps) OpenFile(filename string) (io.Writer, error) {
 	return file, nil
 }
 
-func printTodoJSON(writer io.Writer, items TodoList) {
+func WriteJSONToFile(fileOperations FileOps, filename string, todoList TodoList) error {
 
-	json.NewEncoder(writer).Encode(items)
-}
-
-func WriteJSONToFile(fs FileOps, filename string, items TodoList) error {
-
-	file, err := fs.OpenFile(filename)
+	file, err := fileOperations.OpenFile(filename)
 	if err != nil {
 		fmt.Printf("Error opening file: %v", err)
 		return err
 	}
 
-	printTodoJSON(file, items)
+	printTodoJSON(file, todoList)
 
 	return nil
 }
 
-func ReadJSONFromAFile(filesystem fs.FS, filename string) (items []TodoItem, err error) {
-	todofile, err := filesystem.Open(filename)
+func ReadJSONFromAFile(fileSystem fs.FS, filename string) (todoList TodoList, err error) {
+	todoFile, err := fileSystem.Open(filename)
 	if err != nil {
 		fmt.Printf("Error opening file: %v", err)
 		return nil, err
 	}
-	defer todofile.Close()
+	defer todoFile.Close()
 
-	data, err := io.ReadAll(todofile)
+	fileData, err := io.ReadAll(todoFile)
 
 	if err != nil {
 		fmt.Printf("Error reading file: %v", err)
 		return nil, err
 	}
 
-	err = json.Unmarshal(data, &items)
+	err = json.Unmarshal(fileData, &todoList)
 
 	if err != nil {
 		fmt.Printf("Error parsing JSON: %v", err)
 		return nil, err
 	}
 
-	return items, nil
+	return todoList, nil
+}
+
+func printTodoJSON(output io.Writer, todoList TodoList) {
+
+	json.NewEncoder(output).Encode(todoList)
 }

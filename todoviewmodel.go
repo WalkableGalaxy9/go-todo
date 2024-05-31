@@ -20,16 +20,21 @@ type TodoViewModelCLI struct {
 	TodoList TodoList
 }
 
-func (t *TodoViewModelCLI) PrintTodo(writer io.Writer) {
+const (
+	completeString   = "complete"
+	incompleteString = "incomplete"
+)
 
-	for index, item := range t.TodoList {
-		completeString := "complete"
+func (t *TodoViewModelCLI) PrintTodo(output io.Writer) {
 
-		if !item.Complete {
-			completeString = "incomplete"
+	for index, todo := range t.TodoList {
+		statusString := completeString
+
+		if !todo.Complete {
+			statusString = incompleteString
 		}
 
-		fmt.Fprintf(writer, "%d. %s - %s\n", index+1, item.Title, completeString)
+		fmt.Fprintf(output, "%d. %s - %s\n", index+1, todo.Title, statusString)
 	}
 }
 
@@ -37,13 +42,7 @@ func (t *TodoViewModelCLI) AddTodoInput(input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Title:")
 
-	reader := bufio.NewReader(input)
-	title, err := reader.ReadString('\n')
-
-	if err != nil {
-		log.Fatalf("Error reading title: %v", err)
-	}
-	title = strings.TrimSpace(title)
+	title := getInput(input)
 
 	t.TodoList.CreateTodo(title)
 }
@@ -52,14 +51,9 @@ func (t *TodoViewModelCLI) DeleteTodoInput(input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Number:")
 
-	reader := bufio.NewReader(input)
-	title, err := reader.ReadString('\n')
+	title := getInput(input)
 
-	if err != nil {
-		log.Fatalf("Error reading title: %v", err)
-	}
-
-	indexToRemove, _ := strconv.Atoi(strings.TrimSpace(title))
+	indexToRemove, _ := strconv.Atoi(title)
 
 	t.TodoList.DeleteTodo(indexToRemove)
 }
@@ -68,14 +62,22 @@ func (t *TodoViewModelCLI) ToggleTodoInput(input io.Reader, output io.Writer) {
 
 	fmt.Fprintln(output, "Number:")
 
+	title := getInput(input)
+
+	index, _ := strconv.Atoi(title)
+
+	t.TodoList.ToggleTodo(index)
+}
+
+func getInput(input io.Reader) string {
 	reader := bufio.NewReader(input)
 	title, err := reader.ReadString('\n')
 
 	if err != nil {
-		log.Fatalf("Error reading title: %v", err)
+		log.Fatalf("Error: %v", err)
 	}
 
-	index, _ := strconv.Atoi(strings.TrimSpace(title))
+	title = strings.TrimSpace(title)
 
-	t.TodoList.ToggleTodo(index)
+	return title
 }

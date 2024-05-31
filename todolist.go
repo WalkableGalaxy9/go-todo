@@ -22,18 +22,18 @@ func (t *TodoList) DeleteTodo(indexToRemove int) error {
 	return nil
 }
 
-func (t *TodoList) CreateTodo(title string) {
-	item := TodoItem{Title: title, Complete: false}
+func (t *TodoList) CreateTodo(newTodoTitle string) {
+	newTodo := TodoItem{Title: newTodoTitle, Complete: false}
 
-	*t = append(*t, item)
+	*t = append(*t, newTodo)
 }
 
-func (t *TodoList) ToggleTodo(index int) error {
+func (t *TodoList) ToggleTodo(indexToToggle int) error {
 
-	if index > len(*t) {
+	if indexToToggle > len(*t) {
 		return fmt.Errorf("index out of range")
 	} else {
-		(*t)[index-1].Complete = !(*t)[index-1].Complete
+		(*t)[indexToToggle-1].Complete = !(*t)[indexToToggle-1].Complete
 	}
 	return nil
 }

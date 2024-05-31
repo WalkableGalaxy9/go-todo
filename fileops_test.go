@@ -54,7 +54,7 @@ func TestReadJSONFromAFile(t *testing.T) {
 
 	todolist, err := ReadJSONFromAFile(filesystem, filename)
 
-	want := []TodoItem{
+	want := TodoList{
 		{"Do laundry", true},
 		{"Go shopping", false},
 		{"learn go", false},

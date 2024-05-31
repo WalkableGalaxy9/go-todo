@@ -11,41 +11,26 @@ func TestTopMenu(t *testing.T) {
 
 		output := bytes.Buffer{}
 		input := bytes.Buffer{}
-		wantmenu := "\n-----MENU-----\nA. Add Todo\nD. Delete\nT. Toggle\nX. Exit\n"
 		input.WriteString("A")
 
 		got := GetMenuOption(&input, &output)
+		gotMenu := output.String()
 
-		if got != MenuAddTodo {
-			t.Errorf("Got %v wanted %v", got, MenuAddTodo)
-		}
-
-		gotmenu := output.String()
-
-		if gotmenu != wantmenu {
-			t.Errorf("Got %v wanted %v", gotmenu, wantmenu)
-		}
+		AssertMenuOption(got, MenuAddTodo, t)
+		AssertString(gotMenu, MenuString, t)
 	})
 
 	t.Run("Unknown", func(t *testing.T) {
 		output := bytes.Buffer{}
 		input := bytes.Buffer{}
-		wantmenu := "\n-----MENU-----\nA. Add Todo\nD. Delete\nT. Toggle\nX. Exit\n"
 		input.WriteString(".")
 
 		got := GetMenuOption(&input, &output)
+		gotMenu := output.String()
 
-		if got != MenuUnknown {
-			t.Errorf("Got %v wanted %v", got, MenuUnknown)
-		}
-
-		gotmenu := output.String()
-
-		if gotmenu != wantmenu {
-			t.Errorf("Got %v wanted %v", gotmenu, wantmenu)
-		}
+		AssertMenuOption(got, MenuUnknown, t)
+		AssertString(gotMenu, MenuString, t)
 	})
-
 }
 
 func TestConvertInputToMenuOption(t *testing.T) {
@@ -72,9 +57,7 @@ func TestConvertInputToMenuOption(t *testing.T) {
 
 			got := ConvertInputToMenuOption(test.Input)
 
-			if got != test.Option {
-				t.Errorf("Got %v wanted %v for input %c", got, test.Option, test.Input)
-			}
+			AssertMenuOption(got, test.Option, t)
 		})
 	}
 
@@ -83,14 +66,10 @@ func TestConvertInputToMenuOption(t *testing.T) {
 func TestDisplayMenu(t *testing.T) {
 
 	output := bytes.Buffer{}
-	wantmenu := "\n-----MENU-----\nA. Add Todo\nD. Delete\nT. Toggle\nX. Exit\n"
 
 	DisplayMenu(&output)
 
-	gotmenu := output.String()
+	gotMenu := output.String()
 
-	if gotmenu != wantmenu {
-		t.Errorf("Got %v wanted %v", gotmenu, wantmenu)
-	}
-
+	AssertString(gotMenu, MenuString, t)
 }

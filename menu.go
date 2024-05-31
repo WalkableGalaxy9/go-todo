@@ -18,6 +18,10 @@ const (
 	MenuExit
 )
 
+const (
+	MenuString = "\n-----MENU-----\nA. Add Todo\nD. Delete\nT. Toggle\nX. Exit\n"
+)
+
 func GetMenuOption(input io.Reader, output io.Writer) MenuOption {
 
 	DisplayMenu(output)
@@ -33,7 +37,7 @@ func GetMenuOption(input io.Reader, output io.Writer) MenuOption {
 }
 
 func DisplayMenu(output io.Writer) {
-	fmt.Fprintf(output, "\n-----MENU-----\nA. Add Todo\nD. Delete\nT. Toggle\nX. Exit\n")
+	fmt.Fprintf(output, MenuString)
 }
 
 func ConvertInputToMenuOption(option rune) MenuOption {

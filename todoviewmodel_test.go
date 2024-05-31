@@ -2,9 +2,28 @@ package gotodo
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
 )
+
+func TestAddItem(t *testing.T) {
+
+	todoCLI := TodoViewModelCLI{}
+
+	output := bytes.Buffer{}
+	input := bytes.Buffer{}
+	input.WriteString("New todo\n")
+
+	todoCLI.TodoList = TodoList{}
+
+	todoCLI.AddTodoInput(&input, &output)
+
+	want := TodoList{
+		{Title: "New todo", Complete: false},
+	}
+
+	AssertTodoList(want, todoCLI.TodoList, t)
+	AssertString(output.String(), "Title:\n", t)
+}
 
 func TestPrintTodo(t *testing.T) {
 
@@ -21,11 +40,8 @@ func TestPrintTodo(t *testing.T) {
 		todoCLI.PrintTodo(&buffer)
 
 		want := "1. Do laundry - incomplete\n2. Go shopping - incomplete\n3. learn go - incomplete\n"
-		got := buffer.String()
 
-		if got != want {
-			t.Errorf("Want %s got %s", want, got)
-		}
+		AssertString(buffer.String(), want, t)
 	})
 	t.Run("Testing complete Item", func(t *testing.T) {
 		todoCLI.TodoList = TodoList{
@@ -38,33 +54,9 @@ func TestPrintTodo(t *testing.T) {
 		todoCLI.PrintTodo(&buffer)
 
 		want := "1. Do laundry - complete\n2. Go shopping - complete\n3. learn go - complete\n"
-		got := buffer.String()
 
-		if got != want {
-			t.Errorf("Want %s got %s", want, got)
-		}
+		AssertString(buffer.String(), want, t)
 	})
-}
-
-func TestAddItem(t *testing.T) {
-
-	todoCLI := TodoViewModelCLI{}
-	output := bytes.Buffer{}
-	input := bytes.Buffer{}
-	input.WriteString("New todo")
-	todoCLI.TodoList = TodoList{}
-
-	todoCLI.AddTodoInput(&input, &output)
-
-	want := TodoList{{Title: "New todo", Complete: false}}
-
-	if !reflect.DeepEqual(todoCLI.TodoList, want) {
-		t.Errorf("Got %v want %v", todoCLI.TodoList, want)
-	}
-
-	if output.String() != "Title:\n" {
-		t.Errorf("Got %v want %v", output.String(), "Title:\n")
-	}
 }
 
 func TestDeleteItem(t *testing.T) {
@@ -88,13 +80,8 @@ func TestDeleteItem(t *testing.T) {
 		{"learn go", false},
 	}
 
-	if !reflect.DeepEqual(todoCLI.TodoList, want) {
-		t.Errorf("Got %v want %v", todoCLI.TodoList, want)
-	}
-
-	if output.String() != "Number:\n" {
-		t.Errorf("Got %v want %v", output.String(), "Number:\n")
-	}
+	AssertTodoList(want, todoCLI.TodoList, t)
+	AssertString(output.String(), "Number:\n", t)
 }
 
 func TestToggleItem(t *testing.T) {
@@ -118,11 +105,6 @@ func TestToggleItem(t *testing.T) {
 		{"learn go", false},
 	}
 
-	if !reflect.DeepEqual(todoCLI.TodoList, want) {
-		t.Errorf("Got %v want %v", todoCLI.TodoList, want)
-	}
-
-	if output.String() != "Number:\n" {
-		t.Errorf("Got %v want %v", output.String(), "Number:\n")
-	}
+	AssertTodoList(want, todoCLI.TodoList, t)
+	AssertString(output.String(), "Number:\n", t)
 }
