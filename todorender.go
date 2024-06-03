@@ -12,9 +12,10 @@ var (
 )
 
 type TodoRender interface {
-	RenderTodo(output io.Writer, todoList TodoList) error
-	RenderCreate(output io.Writer, todoList TodoList) error
+	RenderTodo(output io.Writer) error
+	RenderCreate(output io.Writer) error
 	CreateTodoFromPage(newTodo string) error
+	DeleteTodoFromPage(deleteTodoIndex int) error
 }
 
 type TodoRenderHTML struct {
@@ -70,4 +71,9 @@ func StatusString(status bool) string {
 		return "complete"
 	}
 
+}
+
+func (r *TodoRenderHTML) DeleteTodoFromPage(deleteTodoIndex int) error {
+
+	return r.TodoList.DeleteTodo(deleteTodoIndex)
 }
