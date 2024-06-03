@@ -34,7 +34,7 @@ func WriteJSONToFile(fileOperations FileOps, filename string, todoList TodoList)
 		return err
 	}
 
-	printTodoJSON(file, todoList)
+	PrintTodoJSON(file, todoList)
 
 	return nil
 }
@@ -64,7 +64,7 @@ func ReadJSONFromAFile(fileSystem fs.FS, filename string) (todoList TodoList, er
 	return todoList, nil
 }
 
-func printTodoJSON(output io.Writer, todoList TodoList) {
+func PrintTodoJSON(output io.Writer, todoList TodoList) {
 
 	json.NewEncoder(output).Encode(todoList)
 }
