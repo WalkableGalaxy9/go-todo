@@ -1,0 +1,9 @@
+<h1>Todo List</h1>
+<div>
+    {{range $index, $item := .}}
+    <div>{{.Title}} - {{statusString .Complete}} <a href="/toggle/{{$index}}">Toggle</a> <a
+            href="/delete/{{$index}}">Delete</a></div>
+    {{end}}
+
+    <a href="/new">Add</a>
+</div>

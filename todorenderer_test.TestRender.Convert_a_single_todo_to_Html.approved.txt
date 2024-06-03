@@ -1,0 +1,15 @@
+<h1>Todo List</h1>
+<div>
+    
+    <div>Test - incomplete <a href="/toggle/0">Toggle</a> <a
+            href="/delete/0">Delete</a></div>
+    
+    <div>Test2 - complete <a href="/toggle/1">Toggle</a> <a
+            href="/delete/1">Delete</a></div>
+    
+    <div>Test3 - incomplete <a href="/toggle/2">Toggle</a> <a
+            href="/delete/2">Delete</a></div>
+    
+
+    <a href="/new">Add</a>
+</div>
