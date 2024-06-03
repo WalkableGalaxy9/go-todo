@@ -160,3 +160,45 @@ func TestDeleteTodoFromPage(t *testing.T) {
 		AssertTodoList(want, todoHTML.TodoList, t)
 	})
 }
+
+func TestToggleTodoFromPage(t *testing.T) {
+
+	todoHTML := TodoRenderHTML{}
+
+	todoHTML.TodoList = TodoList{
+		{
+			Title:    "Test",
+			Complete: false,
+		},
+		{
+			Title:    "Test2",
+			Complete: true,
+		},
+		{
+			Title:    "Test3",
+			Complete: false,
+		},
+	}
+	want := TodoList{
+		{
+			Title:    "Test",
+			Complete: false,
+		},
+		{
+			Title:    "Test2",
+			Complete: true,
+		},
+		{
+			Title:    "Test3",
+			Complete: true,
+		},
+	}
+
+	t.Run("Toggling the last item", func(t *testing.T) {
+		err := todoHTML.ToggleTodoFromPage(3)
+
+		AssertNoError(err, t)
+
+		AssertTodoList(want, todoHTML.TodoList, t)
+	})
+}

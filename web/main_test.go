@@ -42,11 +42,20 @@ func (r *SpyTodoRenderHTML) DeleteTodoFromPage(deleteTodoIndex int) error {
 	return nil
 }
 
+var ToggleTodoFromPageCount = 0
+
+func (r *SpyTodoRenderHTML) ToggleTodoFromPage(toggleTodoIndex int) error {
+
+	ToggleTodoFromPageCount++
+	return nil
+}
+
 func resetCounts() {
 	DeleteTodoFromPageCount = 0
 	CreateTodoFromPageCount = 0
 	RenderCount = 0
 	RenderCreateCount = 0
+	ToggleTodoFromPageCount = 0
 }
 
 func TestDeleteHandler(t *testing.T) {
@@ -64,7 +73,7 @@ func TestDeleteHandler(t *testing.T) {
 
 	HandleDelete(&spyRenderer, request, responseWriter)
 
-	assertCalls(t, 1, 0, 0, 0)
+	assertCalls(t, 1, 0, 0, 0, 0)
 }
 
 func TestCreateHandler(t *testing.T) {
@@ -83,7 +92,7 @@ func TestCreateHandler(t *testing.T) {
 
 	HandleCreate(&spyRenderer, request, responseWriter)
 
-	assertCalls(t, 0, 1, 0, 0)
+	assertCalls(t, 0, 1, 0, 0, 0)
 }
 
 func TestNewHandler(t *testing.T) {
@@ -102,17 +111,38 @@ func TestNewHandler(t *testing.T) {
 
 	HandleCreateRender(&spyRenderer, responseWriter)
 
-	assertCalls(t, 0, 0, 0, 1)
+	assertCalls(t, 0, 0, 0, 1, 0)
 
 }
 
-func assertCalls(t *testing.T, wantDelete, wantCreate, wantRender, wantRenderCreate int) {
+func TestToggleHandler(t *testing.T) {
+
+	resetCounts()
+	spyRenderer := SpyTodoRenderHTML{}
+
+	// Create a new HTTP request
+	request, err := http.NewRequest("POST", "/toggle/1", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a ResponseRecorder to record the response
+	responseWriter := httptest.NewRecorder()
+
+	HandleToggle(&spyRenderer, request, responseWriter)
+
+	assertCalls(t, 0, 0, 0, 0, 1)
+
+}
+
+func assertCalls(t *testing.T, wantDelete, wantCreate, wantRender, wantRenderCreate, wantToggle int) {
 	t.Helper()
 
 	assertCall(t, wantDelete, DeleteTodoFromPageCount, "Delete Todo")
 	assertCall(t, wantCreate, CreateTodoFromPageCount, "Create Todo")
 	assertCall(t, wantRender, RenderCount, "Render")
 	assertCall(t, wantRenderCreate, RenderCreateCount, "Render Create")
+	assertCall(t, wantToggle, ToggleTodoFromPageCount, "Toggle Todo")
 }
 
 func assertCall(t *testing.T, want, got int, name string) {

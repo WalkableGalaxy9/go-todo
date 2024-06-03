@@ -16,6 +16,7 @@ type TodoRender interface {
 	RenderCreate(output io.Writer) error
 	CreateTodoFromPage(newTodo string) error
 	DeleteTodoFromPage(deleteTodoIndex int) error
+	ToggleTodoFromPage(toggleTodoIndex int) error
 }
 
 type TodoRenderHTML struct {
@@ -76,4 +77,8 @@ func StatusString(status bool) string {
 func (r *TodoRenderHTML) DeleteTodoFromPage(deleteTodoIndex int) error {
 
 	return r.TodoList.DeleteTodo(deleteTodoIndex)
+}
+
+func (r *TodoRenderHTML) ToggleTodoFromPage(toggleTodoIndex int) error {
+	return r.TodoList.ToggleTodo(toggleTodoIndex)
 }

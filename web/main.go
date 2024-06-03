@@ -12,7 +12,6 @@ var todoHTML gotodo.TodoRenderHTML = gotodo.TodoRenderHTML{}
 
 func main() {
 
-	//todoHTML := gotodo.TodoRenderHTML{}
 	todoHTML.TodoList = gotodo.TodoList{
 		{
 			Title:    "Do laundry",
@@ -23,6 +22,7 @@ func main() {
 	http.HandleFunc("/create", createHandler)
 	http.HandleFunc("/new", newHandler)
 	http.HandleFunc("/delete/{id}", deleteHandler)
+	http.HandleFunc("/toggle/{id}", toggleHandler)
 	http.HandleFunc("/", interactHandler)
 	err := http.ListenAndServe("localhost:8081", nil)
 
@@ -72,5 +72,22 @@ func HandleDelete(renderer gotodo.TodoRender, request *http.Request, writer http
 	index++
 
 	renderer.DeleteTodoFromPage(index)
+	http.Redirect(writer, request, "/", http.StatusFound)
+}
+
+func toggleHandler(writer http.ResponseWriter, request *http.Request) {
+
+	// obtain the index to toggle from the url
+	// the index we get from the page is 0-based whereas the delete function expects a 1-based
+	HandleToggle(&todoHTML, request, writer)
+}
+
+func HandleToggle(renderer gotodo.TodoRender, request *http.Request, writer http.ResponseWriter) {
+	indexStr := request.URL.Path[len("/toggle/"):]
+	index, _ := strconv.Atoi(indexStr)
+
+	index++
+
+	renderer.ToggleTodoFromPage(index)
 	http.Redirect(writer, request, "/", http.StatusFound)
 }
